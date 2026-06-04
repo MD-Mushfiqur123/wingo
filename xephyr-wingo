@@ -1,0 +1,32 @@
+#!/bin/sh
+
+go build
+if [ ! $? = 0 ]; then
+  exit
+fi
+
+Xephyr :11.0 -ac -screen 1600x900 -br -once -reset -terminate &
+xemu=$!
+
+sleep 0.5
+export DISPLAY=:11.0
+
+if [ -n "$*" ]; then
+  ./wingo $* &
+else
+  ./wingo --log-colors --log-level 3 -p 1 --config-dir config &
+fi
+
+wingo=$!
+
+sleep 0.5
+xbindkeys
+xsetroot -solid white
+xsetroot -cursor_name left_ptr
+setxkbmap -option terminate:ctrl_alt_bksp
+xmodmap "$HOME/.xmodmaprc"
+DISPLAY=:0 xdotool key ctrl+shift
+
+wait $wingo
+kill $xemu
+

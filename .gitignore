@@ -1,0 +1,10 @@
+.*.swp
+zzz
+*.prof
+*.mprof
+TAGS
+wingo-cmd/wingo-cmd
+wingo
+x.log
+wiki
+
